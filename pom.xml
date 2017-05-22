@@ -294,6 +294,12 @@
 			</notifier>
 		</notifiers>
 	</ciManagement>
+	<distributionManagement>
+	  <snapshotRepository>
+		<id>snapshots</id>
+		<url>http://115.28.37.147:8081/nexus/content/repositories/snapshots/</url>
+	  </snapshotRepository>
+	</distributionManagement>
 	<profiles>
 		<profile>
 			<activation>
