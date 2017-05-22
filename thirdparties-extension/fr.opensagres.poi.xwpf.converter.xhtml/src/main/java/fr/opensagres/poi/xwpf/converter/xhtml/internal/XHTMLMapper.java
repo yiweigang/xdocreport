@@ -477,28 +477,28 @@ public class XHTMLMapper
         CSSStyle cssStyle = getStylesDocument().createCSSStyle( tcPr );
         //At lease support solid borders for now
         if(cssStyle != null) {
-        	TableCellBorder border = getStylesDocument().getTableBorder(table, BorderSide.TOP);
+        	TableCellBorder border = getStylesDocument().getTableCellBorder(cell, BorderSide.TOP);
         	if(border != null)
         	{
         		String style = border.getBorderSize() + "px solid " +StringUtils.toHexString(border.getBorderColor()); 
             	cssStyle.addProperty(CSSStylePropertyConstants.BORDER_TOP, style);
         	}        	
         	
-        	border = getStylesDocument().getTableBorder(table, BorderSide.BOTTOM);
+        	border = getStylesDocument().getTableCellBorder(cell, BorderSide.BOTTOM);
         	if(border != null)
         	{
         		String style = border.getBorderSize() + "px solid " + StringUtils.toHexString(border.getBorderColor());         	
             	cssStyle.addProperty(CSSStylePropertyConstants.BORDER_BOTTOM, style);
         	}        	
         	
-        	border = getStylesDocument().getTableBorder(table, BorderSide.LEFT);
+        	border = getStylesDocument().getTableCellBorder(cell, BorderSide.LEFT);
         	if(border != null)
         	{
         		String style = border.getBorderSize() + "px solid " + StringUtils.toHexString(border.getBorderColor());
             	cssStyle.addProperty(CSSStylePropertyConstants.BORDER_LEFT, style);
         	}        	
         	
-        	border = getStylesDocument().getTableBorder(table, BorderSide.RIGHT);
+        	border = getStylesDocument().getTableCellBorder(cell, BorderSide.RIGHT);
         	if(border != null)
         	{
         		String style = border.getBorderSize() + "px solid " + StringUtils.toHexString(border.getBorderColor());

@@ -96,6 +96,7 @@ import fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil;
 import fr.opensagres.poi.xwpf.converter.core.utils.StringUtils;
 import fr.opensagres.poi.xwpf.converter.core.utils.XWPFRunHelper;
 import fr.opensagres.poi.xwpf.converter.core.utils.XWPFTableUtil;
+
 import org.xml.sax.SAXException;
 
 /**
@@ -958,7 +959,6 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
 
             firstCol = true;
             int cellIndex = -1;
-            int cellPtr = 0;
             CTRow ctRow = row.getCtRow();
             XmlCursor c = ctRow.newCursor();
             c.selectPath( "./*" );
@@ -970,15 +970,14 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                     CTTc tc = (CTTc) o;
                     XWPFTableCell cell = row.getTableCell( tc );
                     cellIndex = getCellIndex( cellIndex, cell );
-                    lastCol = ( cellIndex == nbColumns );
-                    vMergedCells = getVMergedCells( cell, rowIndex, cellPtr );
+                    lastCol = ( cellIndex == nbColumns - 1 );
+                    vMergedCells = getVMergedCells( cell, rowIndex, cellIndex );
                     if ( vMergedCells == null || vMergedCells.size() > 0 )
                     {
                         lastRow = isLastRow( lastRowIfNoneVMerge, rowIndex, rowsSize, vMergedCells );
-                        visitCell( cell, tableContainer, firstRow, lastRow, firstCol, lastCol, rowIndex, cellPtr,
+                        visitCell( cell, tableContainer, firstRow, lastRow, firstCol, lastCol, rowIndex, cellIndex,
                                    vMergedCells );
                     }
-                    cellPtr++;
                     firstCol = false;
                 }
                 else if ( o instanceof CTSdtCell )
@@ -996,14 +995,13 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                         {
                             rowCells.add(cell);
                         }
-                        vMergedCells = getVMergedCells( cell, rowIndex, cellPtr );
+                        vMergedCells = getVMergedCells( cell, rowIndex, cellIndex );
                         if ( vMergedCells == null || vMergedCells.size() > 0 )
                         {
                             lastRow = isLastRow( lastRowIfNoneVMerge, rowIndex, rowsSize, vMergedCells );
-                            visitCell( cell, tableContainer, firstRow, lastRow, firstCol, lastCol, rowIndex, cellPtr,
+                            visitCell( cell, tableContainer, firstRow, lastRow, firstCol, lastCol, rowIndex, cellIndex,
                                        vMergedCells );
                         }
-                        cellPtr++;
                         firstCol = false;
                     }
                 }
@@ -1092,25 +1090,32 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                 vMergedCells.add( cell );
 
                 XWPFTableRow row = null;
-                XWPFTableCell c;
                 XWPFTable table = cell.getTableRow().getTable();
                 for ( int i = rowIndex + 1; i < table.getRows().size(); i++ )
                 {
                     row = table.getRow( i );
-                    c = row.getCell( cellIndex );
-                    if ( c == null )
+                    int nRowCellIndex = -1;
+                    boolean hasMerged = false;
+                    // find for true cell
+                    for ( XWPFTableCell c : row.getTableCells() )
+                    {
+                        BigInteger gridSpan = stylesDocument.getTableCellGridSpan( c.getCTTc().getTcPr() );
+                        nRowCellIndex += gridSpan == null ? 1 : gridSpan.intValue();
+                        if ( nRowCellIndex >= cellIndex )
+                        {
+                            vMerge = stylesDocument.getTableCellVMerge( c );
+                            if ( vMerge != null && vMerge.equals( STMerge.CONTINUE ) )
+                            {
+                                vMergedCells.add( c );
+                                hasMerged = true;
+                                break;
+                            }
+                            return vMergedCells;
+                        }
+                    }
+                    if ( !hasMerged )
                     {
                         break;
-                    }
-                    vMerge = stylesDocument.getTableCellVMerge( c );
-                    if ( vMerge != null && vMerge.equals( STMerge.CONTINUE ) )
-                    {
-
-                        vMergedCells.add( c );
-                    }
-                    else
-                    {
-                        return vMergedCells;
                     }
                 }
             }
