@@ -476,34 +476,35 @@ public class XHTMLMapper
         CTTcPr tcPr = cell.getCTTc().getTcPr();
         CSSStyle cssStyle = getStylesDocument().createCSSStyle( tcPr );
         //At lease support solid borders for now
-        if(cssStyle != null) {
-        	TableCellBorder border = getStylesDocument().getTableCellBorder(cell, BorderSide.TOP);
-        	if(border != null)
-        	{
-        		String style = border.getBorderSize() + "px solid " +StringUtils.toHexString(border.getBorderColor()); 
-            	cssStyle.addProperty(CSSStylePropertyConstants.BORDER_TOP, style);
-        	}        	
-        	
-        	border = getStylesDocument().getTableCellBorder(cell, BorderSide.BOTTOM);
-        	if(border != null)
-        	{
-        		String style = border.getBorderSize() + "px solid " + StringUtils.toHexString(border.getBorderColor());         	
-            	cssStyle.addProperty(CSSStylePropertyConstants.BORDER_BOTTOM, style);
-        	}        	
-        	
-        	border = getStylesDocument().getTableCellBorder(cell, BorderSide.LEFT);
-        	if(border != null)
-        	{
-        		String style = border.getBorderSize() + "px solid " + StringUtils.toHexString(border.getBorderColor());
-            	cssStyle.addProperty(CSSStylePropertyConstants.BORDER_LEFT, style);
-        	}        	
-        	
-        	border = getStylesDocument().getTableCellBorder(cell, BorderSide.RIGHT);
-        	if(border != null)
-        	{
-        		String style = border.getBorderSize() + "px solid " + StringUtils.toHexString(border.getBorderColor());
-            	cssStyle.addProperty(CSSStylePropertyConstants.BORDER_RIGHT, style);
-        	}        	
+        if ( cssStyle != null )
+        {
+            TableCellBorder border = getStylesDocument().getTableCellBorder( cell, BorderSide.TOP );
+            if ( border != null )
+            {
+                String style = border.getBorderSize() + "px solid " + StringUtils.toHexString( border.getBorderColor() );
+                cssStyle.addProperty( CSSStylePropertyConstants.BORDER_TOP, style );
+            }
+
+            border = getStylesDocument().getTableCellBorder( cell, BorderSide.BOTTOM );
+            if ( border != null )
+            {
+                String style = border.getBorderSize() + "px solid " + StringUtils.toHexString( border.getBorderColor() );
+                cssStyle.addProperty( CSSStylePropertyConstants.BORDER_BOTTOM, style );
+            }
+
+            border = getStylesDocument().getTableCellBorder( cell, BorderSide.LEFT );
+            if ( border != null )
+            {
+                String style = border.getBorderSize() + "px solid " + StringUtils.toHexString( border.getBorderColor() );
+                cssStyle.addProperty( CSSStylePropertyConstants.BORDER_LEFT, style );
+            }
+
+            border = getStylesDocument().getTableCellBorder( cell, BorderSide.RIGHT );
+            if ( border != null )
+            {
+                String style = border.getBorderSize() + "px solid " + StringUtils.toHexString( border.getBorderColor() );
+                cssStyle.addProperty( CSSStylePropertyConstants.BORDER_RIGHT, style );
+            }
         }
         attributes = createStyleAttribute( cssStyle, attributes );
 

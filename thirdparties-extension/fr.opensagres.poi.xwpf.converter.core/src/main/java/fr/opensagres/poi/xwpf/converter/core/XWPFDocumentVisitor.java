@@ -989,7 +989,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                     {
                         XWPFTableCell cell = new XWPFTableCell( ctTc, row, row.getTable().getBody() );
                         cellIndex = getCellIndex( cellIndex, cell );
-                        lastCol = ( cellIndex == nbColumns );
+                        lastCol = ( cellIndex == nbColumns - 1 );
                         List<XWPFTableCell> rowCells = row.getTableCells();
                         if (!rowCells.contains(cell))
                         {
